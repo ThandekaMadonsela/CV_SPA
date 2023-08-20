@@ -1,5 +1,11 @@
-//import Dashboard from "../views/Dashboard";
-
+import Dashboard from "./views/Dashboard.js";
+import StudentProfile from "./views/StudentProfile.js";
+import Qualifications from "./views/Qualifications.js";
+import Experiences from "./views/Experiences.js";
+import Referees from "./views/Referees.js";
+import AddQualification from "./views/AddQualification.js";
+import AddExperience from "./views/AddExperience.js";
+import AddReferee from "./views/AddReferee.js";
 //This variable accepts url parameter I want to nativate to
 const navigateTo = url => 
 {
@@ -11,30 +17,34 @@ const navigateTo = url =>
 }
 
 //route function
-const route = () => 
+const route = async () => 
 {
     //array of route objects
-   const routes =
+   const possibleRoutes =
     [
    //The view parameter gets excecuted when the path parameter matches the url
-    { path: "/", view: () => console.log("Viewing Home")},
-    { path: "/studentProfile", view: () => console.log("Viewing studentProfile")},
-    { path: "/qualifications", view: () => console.log("Viewing qualifications")},
-    //{ path: "/qualification", view: () => console.log("Viewing qualification")},
-    { path: "/experiences", view: () => console.log("Viewing experiences")},
-    //{ path: "/experience", view: () => console.log("Viewing experience")},
-    { path: "/referees", view: () => console.log("Viewing referees")},
-    //{ path: "/referee", view: () => console.log("Viewing referee")}
+    { path: "/", view: Dashboard},
+    { path: "/studentProfile", view: StudentProfile},
+    { path: "/qualifications", view: Qualifications},
+    { path: "/experiences", view: Experiences},
+    { path: "/referees", view: Referees},
+    { path: "/addQualification", view: AddQualification},
+    { path: "/addExperience", view: AddExperience},
+    { path: "/addReferee", view: AddReferee}
    ];
 
    const currentPath = location.pathname; // Get the current URL's pathname
-
+  
     // Iterate through the routes to find a match
-    for (const route of routes) {
+    for (const route of possibleRoutes) {
         //"strict equality" or "strict comparison" operator. It's used to compare both the value and the data type of two operands. 
         if (route.path === currentPath) {
             console.log(`Matched route: ${route.path}`);
-            route.view(); // Execute the associated view function
+
+            const view = new route.view();
+
+            document.querySelector("#app").innerHTML = await view.getHtml();
+            //route.view(); // Execute the associated view function
             return; // Exit the loop since we found a match
         }
     }
@@ -63,6 +73,14 @@ document.addEventListener("DOMContentLoaded", () =>
             navigateTo(e.target.href);
         }
     });
+    
+    document.body.addEventListener("click", (e) => {
+        if (e.target.id === "cancel") {
+            e.preventDefault();
+            window.history.back(); // Go back to the previous page
+        }
+    });
+    
 });
    
 
